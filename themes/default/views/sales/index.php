@@ -13,7 +13,10 @@
                 return '<div class="text-center"><span class="sale_status label label-primary">'+partial+'</span></div>';
             } else if (x == 'due') {
                 return '<div class="text-center"><span class="sale_status label label-danger">'+due+'</span></div>';
-            } else {
+            } else if (x == 'void') {
+                return '<div class="text-center"><span class="sale_status label label-danger">'+void+'</span></div>';
+            
+			} else {
                 return '<div class="text-center"><span class="sale_status label label-default">'+x+'</span></div>';
             }
         }
@@ -91,6 +94,9 @@
                     <div class="table-responsive">
                         <table id="SLData" class="table table-striped table-bordered table-condensed table-hover">
                             <thead>
+							    <tr>
+                                    <td colspan="10" class="p0"><input type="text" class="form-control b0" name="search_table" id="search_table" placeholder="<?= lang('type_hit_enter'); ?>" style="width:100%;"></td>
+                                </tr>
                                 <tr class="active">
                                     <th style="max-width:30px;"><?= lang("id"); ?></th>
                                     <th class="col-xs-2"><?= lang("date"); ?></th>
@@ -100,7 +106,7 @@
                                     <th class="col-xs-1"><?= lang("discount"); ?></th>
                                     <th class="col-xs-1"><?= lang("grand_total"); ?></th>
                                     <th class="col-xs-1"><?= lang("paid"); ?></th>
-                                    <th class="col-xs-1"><?= lang("status"); ?></th>
+                                    <th class="col-xs-1"><?= lang("statuss"); ?></th>
                                     <th style="min-width:115px; max-width:115px; text-align:center;"><?= lang("actions"); ?></th>
                                 </tr>
                             </thead>
@@ -120,13 +126,12 @@
                                 <th class="col-sm-2"><?= lang("grand_total"); ?></th>
                                 <th class="col-sm-1"><?= lang("paid"); ?></th>
                                 <th class="col-sm-1">
-                                    <select class="select2 select_filter"><option value=""><?= lang("all"); ?></option><option value="paid"><?= lang("paid"); ?></option><option value="partial"><?= lang("partial"); ?></option><option value="due"><?= lang("due"); ?></option></select>
+                                    <select class="select2 select_filter"><option value=""><?= lang("all"); ?></option><option value="paid"><?= lang("paid"); ?></option><option value="partial"><?= lang("partial"); ?></option>
+									<option value="due"><?= lang("due"); ?></option></select>
                                 </th>
                                 <th class="col-sm-1"><?= lang("actions"); ?></th>
                             </tr>
-                            <tr>
-                                <td colspan="10" class="p0"><input type="text" class="form-control b0" name="search_table" id="search_table" placeholder="<?= lang('type_hit_enter'); ?>" style="width:100%;"></td>
-                            </tr>
+                            
                         </tfoot>
                     </table>
                 </div>
@@ -142,14 +147,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times"></i></span></button>
-                <h4 class="modal-title" id="stModalLabel"><?= lang('update_status'); ?> <span id="status-id"></span></h4>
+                <h4 class="modal-title" id="stModalLabel"><?= lang('update_status'); ?> 
+				<span id="status-ids"></span>
+				<input type="visible" id="status-id" name="status-id" />
+				</h4>
             </div>
             <?= form_open('sales/status'); ?>
             <div class="modal-body">
-                <input type="hidden" value="" id="sale_id" name="sale_id" />
+                <input type="visible" value="" id="sale_id" name="sale_id" />
                 <div class="form-group">
                     <?= lang('status', 'status'); ?>
-                    <?php $opts = array('paid' => lang('paid'), 'partial' => lang('partial'), 'due' => lang('due'))  ?>
+                    <?php $opts = array('paid' => lang('paid'), 'partial' => lang('partial'), 'due' => lang('due'), 'void' => lang('Void'))  ?>
                     <?= form_dropdown('status', $opts, set_value('status'), 'class="form-control select2 tip" id="status" required="required" style="width:100%;"'); ?>
                 </div>
             </div>
@@ -162,6 +170,7 @@
     </div>
 </div>
 <script type="text/javascript">
+  <!-- click status di table sales -->
     $(document).ready(function() {
         $(document).on('click', '.sale_status', function() {
             var sale_id = $(this).closest('tr').attr('id');
