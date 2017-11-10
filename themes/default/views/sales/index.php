@@ -7,6 +7,7 @@
             var paid = '<?= lang('paid'); ?>';
             var partial = '<?= lang('partial'); ?>';
             var due = '<?= lang('due'); ?>';
+			var voids = 'Void';
             if (x == 'paid') {
                 return '<div class="text-center"><span class="sale_status label label-success">'+paid+'</span></div>';
             } else if (x == 'partial') {
@@ -14,7 +15,7 @@
             } else if (x == 'due') {
                 return '<div class="text-center"><span class="sale_status label label-danger">'+due+'</span></div>';
             } else if (x == 'void') {
-                return '<div class="text-center"><span class="sale_status label label-danger">'+void+'</span></div>';
+                return '<div class="text-center"><span class="sale_status label label-danger">'+voids+'</span></div>';
             
 			} else {
                 return '<div class="text-center"><span class="sale_status label label-default">'+x+'</span></div>';
@@ -43,7 +44,7 @@
             { "data": "total_discount", "render": currencyFormat },
             { "data": "grand_total", "render": currencyFormat },
             { "data": "paid", "render": currencyFormat },
-            { "data": "status", "render": status },
+            { "data": "status", "render": status,"class" :"statussales" },
             { "data": "Actions", "searchable": false, "orderable": false }
             ],
             "footerCallback": function (  tfoot, data, start, end, display ) {
@@ -154,15 +155,13 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times"></i></span></button>
-                <h4 class="modal-title" id="stModalLabel"><?= lang('update_status'); ?> 
-				<span id="status-ids"></span>
-				<input type="visible" id="status-id" name="status-id" />
-				</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true"><i class="fa fa-times"></i></span></button>
+                <h4 class="modal-title" id="stModalLabel"><?= lang('update_status'); ?> <span id="status-id"></span></h4>
             </div>
             <?= form_open('sales/status'); ?>
             <div class="modal-body">
-                <input type="visible" value="" id="sale_id" name="sale_id" />
+                <input type="hidden" value="" id="sale_id" name="sale_id" />
                 <div class="form-group">
                     <?= lang('status', 'status'); ?>
                     <?php $opts = array('paid' => lang('paid'), 'partial' => lang('partial'), 'due' => lang('due'), 'void' => lang('Void'))  ?>
@@ -182,11 +181,11 @@
     $(document).ready(function() {
 		    
    $(document).on('click', '.sale_status', function() {
-           // var sale_id = $(this).closest('tr').attr('id');
+            //var sale_status= $(this).closest('tr').attr('id');
 			var sale_id = $(this).closest('tr').find('.id').text();
-            var curr_status = $(this).text();
+            var curr_status = $(this).closest('tr').find('.statussales').text();
             var status = curr_status.toLowerCase();
-			alert("sale id: " + sale_id );
+			//alert("sale id: " + sale_id );
             $('#status-id').text('( <?= lang('sale_id'); ?> '+sale_id+' )');
             $('#sale_id').val(sale_id);
             $('#status').val(status);
