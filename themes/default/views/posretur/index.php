@@ -112,6 +112,7 @@
             <aside class="main-sidebar">
                 <section class="sidebar">
                     <ul class="sidebar-menu">
+					
                         <li class="mm_welcome"><a href="<?= site_url(); ?>"><i class="fa fa-dashboard"></i> <span><?= lang('dashboard'); ?></span></a></li>
                         <?php if ($Settings->multi_store && !$this->session->userdata('store_id')) { ?>
                         <li class="mm_stores"><a href="<?= site_url('stores'); ?>"><i class="fa fa-building-o"></i> <span><?= lang('stores'); ?></span></a></li>
@@ -379,17 +380,7 @@
                                             <div class="form-group" style="margin-bottom:5px;">
                                                 <input type="text" name="hold_ref" value="<?= $reference_note; ?>" id="hold_ref" class="form-control kb-text" placeholder="<?=lang('reference_note')?>" />
                                             </div>
-											<!-- dropdonn mfa-->
-                                            <div class="form-group">
-                                                <?php
-                                                    $cat[''] = lang("select")." ".lang("MFA");
-                                                        foreach($mfas as $mfa) {
-                                                            $cat[$mfa->id] = $mfa->name;
-                                                        }
-                                                ?>
-                                                <?= form_dropdown('mfa', $cat, set_value('mfa'), 'class="form-control select2 tip" id="mfa"  required="required" style="width:100%;"'); ?>
-                                            </div>  
-                                            <!-- end dropdown mfa-->
+											
                                             <div class="form-group" style="margin-bottom:5px;">
                                                 <input type="text" name="code" id="add_item" class="form-control" placeholder="<?=lang('search__scan')?>" />
                                             </div>
