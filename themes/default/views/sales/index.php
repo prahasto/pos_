@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-
+        var selected = [];
         function status(x) {
             var paid = '<?= lang('paid'); ?>';
             var partial = '<?= lang('partial'); ?>';
@@ -35,7 +35,7 @@
             { extend: 'colvis', text: 'Columns'},
             ],
             "columns": [
-            { "data": "id", "visible": false },
+            { "data": "id", "visible": true, "class" :"id" },
             { "data": "date", "render": hrld },
             { "data": "customer_name" },
             { "data": "total", "render": currencyFormat },
@@ -56,6 +56,13 @@
             }
 
         });
+		
+		
+			
+		 
+		
+         
+		
 
         $('#search_table').on( 'keyup change', function (e) {
             var code = (e.keyCode ? e.keyCode : e.which);
@@ -92,7 +99,7 @@
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="SLData" class="table table-striped table-bordered table-condensed table-hover">
+                        <table id="SLData" class="table  table-striped table-bordered table-condensed table-hover">
                             <thead>
 							    <tr>
                                     <td colspan="10" class="p0"><input type="text" class="form-control b0" name="search_table" id="search_table" placeholder="<?= lang('type_hit_enter'); ?>" style="width:100%;"></td>
@@ -106,7 +113,7 @@
                                     <th class="col-xs-1"><?= lang("discount"); ?></th>
                                     <th class="col-xs-1"><?= lang("grand_total"); ?></th>
                                     <th class="col-xs-1"><?= lang("paid"); ?></th>
-                                    <th class="col-xs-1"><?= lang("statuss"); ?></th>
+                                    <th class="col-xs-1"><?= lang("status"); ?></th>
                                     <th style="min-width:115px; max-width:115px; text-align:center;"><?= lang("actions"); ?></th>
                                 </tr>
                             </thead>
@@ -115,6 +122,7 @@
                                    <td colspan="10" class="dataTables_empty"><?= lang('loading_data_from_server'); ?></td>
                                </tr>
                            </tbody>
+                            
                            <tfoot>
                             <tr class="active">
                                 <th style="max-width:30px;"><input type="text" class="text_filter" placeholder="[<?= lang('id'); ?>]"></th>
@@ -172,16 +180,32 @@
 <script type="text/javascript">
   <!-- click status di table sales -->
     $(document).ready(function() {
-        $(document).on('click', '.sale_status', function() {
-            var sale_id = $(this).closest('tr').attr('id');
+		    
+   $(document).on('click', '.sale_status', function() {
+           // var sale_id = $(this).closest('tr').attr('id');
+			var sale_id = $(this).closest('tr').find('.id').text();
             var curr_status = $(this).text();
             var status = curr_status.toLowerCase();
+			alert("sale id: " + sale_id );
             $('#status-id').text('( <?= lang('sale_id'); ?> '+sale_id+' )');
             $('#sale_id').val(sale_id);
             $('#status').val(status);
             $('#status').select2('val', status);
             $('#stModal').modal()
         });
+		   
+		   /*
+		$(document).on('click', '.sale_status', function() {
+            var sale_id = $(this).closest('tr').attr('id');
+            var curr_status = $(this).text();
+            var status = curr_status.toLowerCase();
+			alert("sale id: " + sale_id );
+            $('#status-id').text('( <?= lang('sale_id'); ?> '+sale_id+' )');
+            $('#sale_id').val(sale_id);
+            $('#status').val(status);
+            $('#status').select2('val', status);
+            $('#stModal').modal()
+        });  */
     });
 </script>
 <?php } ?>
