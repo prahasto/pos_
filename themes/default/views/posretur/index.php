@@ -361,10 +361,11 @@
 												<!-- autocomplete customer-->
                                                 <div class="form-group" style="margin-bottom:5px;">
                                                     <div class="input-group">
-                                                        <input type="text" name="customerauto" id="customerauto" class="form-control ui-autocomplete-input" placeholder="search customer" autocomplete="off">
-                                                        <div class="input-group-addon no-print" style="padding: 2px 5px;">
-                                                            <a href="#" id="add-customer" class="external" data-toggle="modal" data-target="#myModal"><i class="fa fa-2x fa-plus-circle" id="addIcon"></i></a>
-                                                        </div>
+                                                        <input type="text" name="salesauto" id="salesauto" class="form-control ui-autocomplete-input" placeholder="Search Sales" autocomplete="off">
+                                                        <div  class="input-group-addon no-print" style="padding: 2px 5px;">
+                                                            <a  href="#" id="add-pos" class="external" data-toggle="modal" data-target="#myModal"> <i class="fa fa-2x fa-plus-circle" id="addIcon"></i>
+                                                            </a>
+                                                       </div>
                                                     </div>
                                                     <div style="clear:both;"></div>
                                                 </div>
