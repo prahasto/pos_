@@ -116,7 +116,7 @@ class Sales_model extends CI_Model
     }
 
     public function getAllSaleItems($sale_id) {
-        $j = "(SELECT id, code, name, tax_method from {$this->db->dbprefix('products')}) P";
+        $j = "(SELECT id, salesno,code, name, tax_method from {$this->db->dbprefix('products')}) P";
         $this->db->select("sale_items.*,
             (CASE WHEN {$this->db->dbprefix('sale_items')}.product_code IS NULL THEN {$this->db->dbprefix('products')}.code ELSE {$this->db->dbprefix('sale_items')}.product_code END) as product_code,
             (CASE WHEN {$this->db->dbprefix('sale_items')}.product_name IS NULL THEN {$this->db->dbprefix('products')}.name ELSE {$this->db->dbprefix('sale_items')}.product_name END) as product_name,

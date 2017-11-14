@@ -15,6 +15,41 @@ class Posretur extends MY_Controller {
 
     }
 
+    function getsalesbyid () {
+       // $sale = $this->posretur_model->getSaleByID($id);
+        $inv_items = $this->posretur_model->getAllSaleItems(1);
+        krsort($inv_items);
+        $c = rand(100000, 9999999);
+        foreach ($inv_items as $item) {
+            $row = $this->site->getProductByID($item->product_id);
+            if (!$row) {
+                $row = json_decode('{}');
+            }
+            $row->price = $item->net_unit_price;
+            $row->unit_price = $item->unit_price;
+            $row->real_unit_price = $item->real_unit_price;
+            $row->discount = $item->discount;
+            $row->qty = $item->quantity;
+            $row->comment = $item->comment;
+            $combo_items = FALSE;
+            $row->quantity += $item->quantity;
+            /*if ($row->type == 'combo') {
+                $combo_items = $this->pos_model->getComboItemsByPID($row->id);
+                foreach ($combo_items as $combo_item) {
+                    $combo_item->quantity += ($combo_item->qty*$item->quantity);
+                }
+            }*/
+            $ri = $this->Settings->item_addition ? $row->id : $c;
+            $pr[$ri] = array('id' => $c, 'item_id' => $row->id, 'label' => $row->name . " (" . $row->code . ")", 'row' => $row, 'combo_items' => $combo_items);
+            $c++;
+        }
+       echo  json_encode($pr);
+        //$this->data['eid'] = $id;
+        //$this->data['sale'] = $sale;
+        //$this->data['message'] = lang('sale_loaded');
+
+    }
+
     function autocompletesales() {
         $term = $this->input->get('term', TRUE);
 

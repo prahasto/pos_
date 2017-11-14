@@ -408,6 +408,7 @@
                                                             <th style="width: 15%;text-align:center;"><?=lang('price')?></th>
                                                             <th style="width: 15%;text-align:center;"><?=lang('qty')?></th>
                                                             <th style="width: 20%;text-align:center;"><?=lang('subtotal')?></th>
+                                                            <th style="width: 20%;text-align:center;"><?=lang('MFA')?></th>
                                                             <th style="width: 20px;" class="satu"><i class="fa fa-trash-o"></i></th>
                                                         </tr>
                                                     </thead>
@@ -419,6 +420,7 @@
                                                         <th><?=lang('product')?></th>
                                                         <th style="width: 15%;text-align:center;"><?=lang('price')?></th>
                                                         <th style="width: 15%;text-align:center;"><?=lang('qty')?></th>
+                                                        <th style="width: 20%;text-align:center;"><?=lang('subtotal')?></th>
                                                         <th style="width: 20%;text-align:center;"><?=lang('subtotal')?></th>
                                                         <th style="width: 20px;" class="satu"><i class="fa fa-trash-o"></i></th>
                                                     </tr>
