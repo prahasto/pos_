@@ -4,9 +4,9 @@
 
 $(document).ready(function()
 {
-    $("#mfaauto").autocomplete(
+    $("#searchsales").autocomplete(
         {
-            source:base_url+"pos/autocompletemfa",
+            source:base_url+"posretur/autocompletesales",
             minLength:1,
             autoFocus:!1,
             delay:200,
@@ -14,14 +14,14 @@ $(document).ready(function()
             {
                 $(this).val().length>=16&&0==e.content[0].id?
                     (
-                        bootbox.alert(lang.no_match_found,function() {$("#mfaauto").focus()}),
+                        bootbox.alert(lang.no_match_found,function() {$("#searchsales").focus()}),
                             $(this).val("")
                     )
                     :1==e.content.length&&0!=e.content[0].id?
                     (e.item=e.content[0],$(this).data("ui-autocomplete")._trigger("select","autocompleteselect",e),
                             $(this).autocomplete("close")
                     ):1==e.content.length&&0==e.content[0].id&&
-                (bootbox.alert(lang.no_match_found,function(){$("#mfaauto").focus()}),$(this).val(""))
+                (bootbox.alert(lang.no_match_found,function(){$("#searchsales").focus()}),$(this).val(""))
 
             },
             select:function(t,e)
@@ -31,7 +31,7 @@ $(document).ready(function()
                 // alert(e.item.name);
                 t.preventDefault(),
                     $(this).val(e.item.name);
-                $("#mfa_id").val(e.item.item_id);
+                $("#sales_id").val(e.item.item_id);
                 //0!==e.item.id?add_invoice_item(e.item)&&$(this).val(""):bootbox.alert(lang.no_match_found)
             }
         })

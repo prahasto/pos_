@@ -358,19 +358,20 @@
                                                     </div>
                                                 <div style="clear:both;"></div>
                                                 </div> -->
-												<!-- autocomplete customer-->
+												<!-- autocomplete sales-->
                                                 <div class="form-group" style="margin-bottom:5px;">
-                                                    <div class="input-group">
+                                                    <input type="text" name="searchsales" id="searchsales" class="form-control ui-autocomplete-input" placeholder="Search Sales" autocomplete="off">
+                                                  <!-- <div class="input-group">
                                                         <input type="text" name="salesauto" id="salesauto" class="form-control ui-autocomplete-input" placeholder="Search Sales" autocomplete="off">
                                                         <div  class="input-group-addon no-print" style="padding: 2px 5px;">
                                                             <a  href="#" id="add-pos" class="external" data-toggle="modal" data-target="#myModal"> <i class="fa fa-2x fa-plus-circle" id="addIcon"></i>
                                                             </a>
                                                        </div>
-                                                    </div>
+                                                    </div> -->
                                                     <div style="clear:both;"></div>
                                                 </div>
                                                 <div class="form-group" style="margin-bottom:5px;">
-                                                    <input type="text" name="customer_id" id="customer_id" class="form-control" placeholder="customer id">
+                                                    <input type="text" name="sales_id" id="sales_id" class="form-control" placeholder="sales id">
                                                 </div>
                                                 <!-- end autocomplete customer-->
                                             <?php if ($eid && $Admin) { ?>
@@ -540,7 +541,7 @@
                                 </div>
 							</td>
                        
-					   <td>
+					   <!--<td>
                             <td>
                                 <div class="contents" id="right-col">
                                     <div id="item-list">
@@ -562,7 +563,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </td>
+                            </td> -->
                         </tr>
                </table>
             </div>
@@ -1294,7 +1295,7 @@
 
                     <script src="<?= $assets ?>dist/js/libraries.min.js" type="text/javascript"></script>
                     <script src="<?= $assets ?>dist/js/scripts.min.js" type="text/javascript"></script>
-                    <script src="<?= $assets ?>dist/js/pos.min.js" type="text/javascript"></script>
+                    <script src="<?= $assets ?>dist/js/posretur.js" type="text/javascript"></script>
                     <?php if($Settings->remote_printing != 1 && $Settings->print_img) { ?>
                     <script src="<?= $assets ?>dist/js/htmlimg.js"></script>
                     <?php } ?>
