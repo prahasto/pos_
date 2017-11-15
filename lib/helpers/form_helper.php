@@ -433,9 +433,13 @@ if ( ! function_exists('form_dropdown'))
 			}
 			else
 			{
-				$form .= '<option value="'.html_escape($key).'"'
-					.(in_array($key, $selected) ? ' selected="selected"' : '').'>'
-					.(string) $val."</option>\n";
+				//if ($key <> '') {
+                    $form .= '<option value="' . html_escape($key) . '" '
+                        . (in_array($key, $selected) ? ' disabled selected' : '') . '>'
+                        . (string)$val . "</option>\n";
+                //} else {
+                 //   $form .= '<option value="" disabled selected>(string)$val</option>';
+               // }
 			}
 		}
 
