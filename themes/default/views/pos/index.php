@@ -342,7 +342,7 @@
                 <table style="width:100%;" class="layout-table">
 				   <tbody>
 					   <tr>
-					        <td style="width: 460px;">
+					        <td style="width: 630px;">
 							    <div id="pos">
 								    <?= form_open('pos', 'id="pos-sale-form"'); ?>
                                         <div class="well well-sm" id="leftdiv">
@@ -387,7 +387,7 @@
                                                             $cat[$mfa->id] = $mfa->name;
                                                         }
                                                 ?>
-                                                <?= form_dropdown('mfa', $cat, set_value('mfa'), 'class="form-control select2 tip" id="mfa"  required="required" style="width:100%;"'); ?>
+                                                <?= form_dropdown('mfaid', $cat, set_value('mfaid'), 'class="form-control select2 tip" id="mfadropdown"  required="required" style="width:100%;"'); ?>
                                             </div>  
                                             <!-- end dropdown mfa-->
                                             <div class="form-group" style="margin-bottom:5px;">
@@ -404,12 +404,14 @@
                                                 <table class="table table-striped table-condensed table-hover list-table" style="margin:0;">
                                                     <thead>
                                                         <tr class="success">
-                                                            <th><?=lang('product')?></th>
+                                                            <th style="width: 20%;text-align:center;"><?=lang('product')?></th>
                                                             <th style="width: 15%;text-align:center;"><?=lang('price')?></th>
-                                                            <th style="width: 15%;text-align:center;"><?=lang('qty')?></th>
-                                                            <th style="width: 20%;text-align:center;"><?=lang('subtotal')?></th>
-                                                            <th style="width: 20%;text-align:center;"><?=lang('MFA')?></th>
-                                                            <th style="width: 20px;" class="satu"><i class="fa fa-trash-o"></i></th>
+                                                            <th style="width: 10%;text-align:left;"><?=lang('qty')?></th>
+                                                            <th style="width: 15%;text-align:left;"><?=lang('subtotal')?></th>
+                                                            <th style="width: 10%;text-align:left;">Disc %</th>
+                                                            <th style="width: 15%;text-align:center;">Total</th>
+                                                            <th style="width: 10%;text-align:center;"><?=lang('MFA')?></th>
+                                                            <th style="width: 5%; text-align:right;" class="satu"><i class="fa fa-trash-o"></i></th>
                                                         </tr>
                                                     </thead>
                                                 </table>
@@ -417,12 +419,14 @@
                                             <table id="posTable" class="table table-striped table-condensed table-hover list-table" style="margin:0px;" data-height="100">
                                                 <thead>
                                                     <tr class="success">
-                                                        <th><?=lang('product')?></th>
-                                                        <th style="width: 15%;text-align:center;"><?=lang('price')?></th>
-                                                        <th style="width: 15%;text-align:center;"><?=lang('qty')?></th>
-                                                        <th style="width: 20%;text-align:center;"><?=lang('subtotal')?></th>
-                                                        <th style="width: 20%;text-align:center;"><?=lang('subtotal')?></th>
-                                                        <th style="width: 20px;" class="satu"><i class="fa fa-trash-o"></i></th>
+                                                        <th style="width: 20%;text-align:left;"><?=lang('product')?></th>
+                                                        <th style="width: 15%;text-align:left;"><?=lang('price')?></th>
+                                                        <th style="width: 7%;text-align:left;"><?=lang('qty')?></th>
+                                                        <th style="width: 19%;text-align:left;"><?=lang('subtotal')?></th>
+                                                        <th style="width: 7%;text-align:right;">Disc</th>
+                                                        <th style="width: 15%;text-align:left;">Total</th>
+                                                        <th style="width: 10%;text-align:right;"><?=lang('MFA')?></th>
+                                                        <th style="width: 5%;" class="satu"><i class="fa fa-trash-o"></i></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody></tbody>
@@ -1149,6 +1153,11 @@
     lang['merchant_copy'] = '<?= lang('merchant_copy'); ?>';
 
     $(document).ready(function() {
+       /* $( "#mfadropdown" ).change(function()
+        {
+            alert ($("#mfadropdown option:selected").text());
+        });*/
+
         <?php if ($this->session->userdata('rmspos')) { ?>
             if (get('spositems')) { remove('spositems'); }
             if (get('spos_discount')) { remove('spos_discount'); }
