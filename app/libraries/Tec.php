@@ -117,6 +117,18 @@ class Tec
         return FALSE;
     }
 
+    public function  sendemail($to, $subject, $message) {
+        //$Result=false;
+
+
+        return $this->tec_mail->sendMail('erp2@shafco.com','syst3m.Pr0c3dur3','aji.prahasto@shafco.com','Nama Pembeli','Tes Kirim Bon');
+
+
+
+
+
+    }
+
     public function send_email($to, $subject, $message, $from = NULL, $from_name = NULL, $attachment = NULL, $cc = NULL, $bcc = NULL) {
         list($user, $domain) = explode('@', $to);
         if ($domain != 'tecdiary.com' || DEMO) {

@@ -14,6 +14,13 @@ class Pos extends MY_Controller {
 
     }
 
+   function createnotransales (){
+       /*SELECT COALESCE(MAX(substr(salesno, 14,3)),0)+1 AS counter
+                            FROM tec_sales
+                            WHERE substr(salesno, 1 , 3)='BDN'
+       AND substr(salesno, 5, 8)='13112017' AND substr(salesno,17,1)='L';*/
+   }
+
     function index($sid = NULL, $eid = NULL) {
         if (!$this->Settings->multi_store) {
             $this->session->set_userdata('store_id', 1);
@@ -55,11 +62,19 @@ class Pos extends MY_Controller {
             $unit_cost = "unit_cost";
             $tax_rate = "tax_rate";
 
+           // $date = $eid ? $this->input->post('date') : date('Y-m-d H:i:s');salesdate
             $date = $eid ? $this->input->post('date') : date('Y-m-d H:i:s');
+            $dates = date('dmY',strtotime($date));
+            $salesno =  $this->pos_model->getLastNo($dates,$this->site->getStoreCode());
             $customer_id = $this->input->post('customer_id');
             $customer_details = $this->pos_model->getCustomerByID($customer_id);
             $customer = $customer_details->name;
             $note = $this->tec->clear_tags($this->input->post('spos_note'));
+
+
+            //    $this->session->set_flashdata('error',$salesno);
+            //    redirect($_SERVER["HTTP_REFERER"]);
+
 
             $total = 0;
             $product_tax = 0;
@@ -73,6 +88,11 @@ class Pos extends MY_Controller {
                 $real_unit_price = $this->tec->formatDecimal($_POST['real_unit_price'][$r]);
                 $item_quantity = $_POST['quantity'][$r];
                 $item_comment = $_POST['item_comment'][$r];
+
+                $disc_persen =$_POST['discpersen'][$r];
+                $mfa_id = $_POST['mfa_id'][$r];
+                $vtotal = $_POST['vtotal'][$r];
+
                 $item_discount = isset($_POST['product_discount'][$r]) ? $_POST['product_discount'][$r] : '0';
 
                 if (isset($item_id) && isset($real_unit_price) && isset($item_quantity)) {
@@ -147,7 +167,7 @@ class Pos extends MY_Controller {
 
                     $product_tax += $pr_item_tax;
                     $subtotal = (($item_net_price * $item_quantity) + $pr_item_tax);
-
+                    $v_total= ($subtotal-($subtotal*($disc_persen/100)));
                     $products[] = array(
                         'product_id' => $item_id,
                         'quantity' => $item_quantity,
@@ -163,9 +183,12 @@ class Pos extends MY_Controller {
                         'cost' => $product_cost,
                         'product_code' => $product_code,
                         'product_name' => $product_name,
+                        'disc_persen' => $disc_persen,
+                        'mfa_id' => $mfa_id,
+                        'total' => $v_total,
                         );
 
-                    $total += $item_net_price * $item_quantity;
+                    $total += $v_total;//$item_net_price * $item_quantity;
 
                 }
             }
@@ -219,10 +242,15 @@ class Pos extends MY_Controller {
             $rounding = $this->tec->formatDecimal($round_total - $grand_total);
             if ($customer_details->id == 1 && $paid < $round_total) {
                 $this->session->set_flashdata('error', lang('select_customer_for_due'));
+              //  $this->session->set_flashdata('error', $salesno);
                 redirect($_SERVER["HTTP_REFERER"]);
             }
 
-            $data = array('date' => $date,
+//'$salesno' => $salesno,
+            //alert($total);
+            $data = array(
+                'salesno' => $salesno,
+                'date' => $date,
                 'customer_id' => $customer_id,
                 'customer_name' => $customer,
                 'total' => $this->tec->formatDecimal($total),
@@ -311,7 +339,7 @@ class Pos extends MY_Controller {
                 }
 
             } else {
-
+//alert("add sales");
                 if($sale = $this->pos_model->addSale($data, $products, $payment, $did)) {
                     $this->session->set_userdata('rmspos', 1);
                     $msg = lang("sale_added");
@@ -373,6 +401,7 @@ class Pos extends MY_Controller {
                 $this->data['message'] = lang('suspended_sale_loaded');
             }
 
+            /* edit data */
             if(isset($eid) && !empty($eid)) {
                 $sale = $this->pos_model->getSaleByID($eid);
                 $inv_items = $this->pos_model->getAllSaleItems($eid);
@@ -406,6 +435,7 @@ class Pos extends MY_Controller {
                 $this->data['sale'] = $sale;
                 $this->data['message'] = lang('sale_loaded');
             }
+            /* end edit data*/
             $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
             $this->data['reference_note'] = isset($sid) && !empty($sid) ? $suspended_sale->hold_ref : (isset($eid) && !empty($eid) ? $sale->hold_ref : NULL);
             $this->data['sid'] = isset($sid) && !empty($sid) ? $sid : 0;
@@ -417,6 +447,8 @@ class Pos extends MY_Controller {
 			$storeid =$this->site->getStoreID();
 			$this->data['storeid'] =$storeid;
 			$this->data['mfas'] = $this->site->getMFAByStoreID($storeid);
+            //$this->data['tanggal'] = $tglKode=date('dmY',strtotime($tanggal));
+
             $this->data['message'] = $this->session->flashdata('message');
             $this->data['suspended_sales'] = $this->site->getUserSuspenedSales();
 
@@ -465,6 +497,9 @@ class Pos extends MY_Controller {
             $product->qty = 1;
             $product->comment = '';
             $product->discount = '0';
+            $product->discountpersen = 0;
+            $product->mfa_id = 0;
+            $product->mfa_name = '';
             $product->price = $product->store_price > 0 ? $product->store_price : $product->price;
             $product->real_unit_price = $product->price;
             $product->unit_price = $product->tax ? ($product->price+(($product->price*$product->tax)/100)) : $product->price;
@@ -480,7 +515,7 @@ class Pos extends MY_Controller {
 
     function autocompletemfa() {
         $term = $this->input->get('term', TRUE);
-        
+
         $rows = $this->pos_model->getCustomerNames($term);
         if ($rows) {
             foreach ($rows as $row) {
@@ -491,12 +526,12 @@ class Pos extends MY_Controller {
             echo json_encode($cust);
         } else {
             echo json_encode(array(array('id' => 0, 'label' => lang('no_match_found'), 'value' => $term)));
-        } 
+        }
     }
 
     function autocompletecustomer() {
         $term = $this->input->get('term', TRUE);
-        
+
         $rows = $this->pos_model->getCustomerNames($term);
         if ($rows) {
             foreach ($rows as $row) {
@@ -507,7 +542,7 @@ class Pos extends MY_Controller {
             echo json_encode($cust);
         } else {
             echo json_encode(array(array('id' => 0, 'label' => lang('no_match_found'), 'value' => $term)));
-        } 
+        }
     }
 
     function suggestions() {
@@ -666,6 +701,7 @@ class Pos extends MY_Controller {
         if($this->input->get('per_page') == 'n' ) { $page = 0; } else { $page = $this->input->get('per_page'); }
         if($this->input->get('tcp') == 1 ) { $tcp = TRUE; } else { $tcp = FALSE; }
 
+        //$products = $this->pos_model->fetch_products($category_id, $this->Settings->pro_limit, $page);
         $products = $this->pos_model->fetch_products($category_id, $this->Settings->pro_limit, $page);
         $pro = 1;
         $prods = "<div>";
@@ -769,12 +805,18 @@ class Pos extends MY_Controller {
         $message = preg_replace('#\<!-- start -->(.+)\<!-- end -->#Usi', '', $receipt);
         $subject = lang('email_subject').' - '.$this->Settings->site_name;
 
+        //$this->tec->sendemail('aji.prahasto@shafco.com', 'tagihan pemeblanjaan', 'berikut tagihannya');
+
         try {
             if ($this->tec->send_email($to, $subject, $message)) {
+           // if ($this->tec->sendemail('aji.prahasto@shafco.com', 'tagihan pemeblanjaan', 'berikut tagihannya')) {
+
                 echo json_encode(array('msg' => lang("email_success")));
             } else {
                 echo json_encode(array('msg' => lang("email_failed")));
             }
+            //$pesan = $this->tec->sendemail('aji.prahasto@shafco.com', 'tagihan pemeblanjaan', 'berikut tagihannya');
+            //echo json_encode(array('msg' => $pesan));
         } catch (Exception $e) {
             echo json_encode(array('msg' => $e->getMessage()));
         }

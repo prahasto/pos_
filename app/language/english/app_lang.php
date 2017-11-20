@@ -23,7 +23,7 @@
 */
 
 
-$lang['quick_cash_notes']               = array('10', '20', '50', '100', '500');
+$lang['quick_cash_notes']               = array('5000', '10000', '20000', '50000', '100000');
 
 /* --------------------------- CUSTOM FILEDS --------------------------- */
 $lang['ccf1']                               = "Customer Custom Field 1";

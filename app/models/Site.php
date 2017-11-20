@@ -116,6 +116,13 @@ class Site extends CI_Model
          $data = $q->result_array();
          return $data[0]['id'];
 	}
+
+    function getStoreCode() {
+        $this->db->where('islive', 1);
+        $q = $this->db->get('stores');
+        $data = $q->result_array();
+        return $data[0]['code'];
+    }
 	
 	 public function getMFAByStoreID($storeid) {
 		

@@ -119,7 +119,7 @@
                         <!--
 						<li class="mm_pos">
 						       <a href="<?= site_url('pos'); ?>">
-							   <i class="fa fa-th"></i> 
+							   <i class="fa fa-th"></i>
 							   <span><?= lang('pos'); ?></span>
 							   </a>
 						</li>
@@ -133,7 +133,7 @@
                             <ul class="treeview-menu">
                                 <li id="pos_order"><a href="<?= site_url('pos'); ?>"><i class="fa fa-circle-o"></i> <?= lang('pos_order'); ?></a></li>
                                 <li id="pos_retur"><a href="<?= site_url('posretur'); ?>"><i class="fa fa-circle-o"></i> <?= lang('pos_retur'); ?></a></li>
-                                
+
                             </ul>
 						</li>
                         <?php if ($Admin) { ?>
@@ -368,28 +368,37 @@
                                                     <div style="clear:both;"></div>
                                                 </div>
                                                 <div class="form-group" style="margin-bottom:5px;">
-                                                    <input type="text" name="customer_id" id="customer_id" class="form-control" placeholder="customer id">
+                                                    <input type="hidden" name="customer_id" id="customer_id" class="form-control" placeholder="customer id">
                                                 </div>
                                                 <!-- end autocomplete customer-->
                                             <?php if ($eid && $Admin) { ?>
-                                            <div class="form-group" style="margin-bottom:5px;">
-                                                <?= form_input('date', set_value('date', $sale->date), 'id="date" required="required" class="form-control"'); ?>
-                                            </div>
+                                            <!-- <div class="form-group" style="margin-bottom:5px;">
+                                                < ?= form_input('date', set_value('date', $sale->date), 'id="date" required="required" class="form-control"'); ?>
+                                            </div> -->
                                             <?php } ?>
                                             <div class="form-group" style="margin-bottom:5px;">
                                                 <input type="text" name="hold_ref" value="<?= $reference_note; ?>" id="hold_ref" class="form-control kb-text" placeholder="<?=lang('reference_note')?>" />
+
                                             </div>
+                                                <div class="form-group">
+
+                                                    <?= form_input('date', (isset($_POST['date']) ? $_POST['date'] : ""), 'class="form-control datetimepicker" id="datesales"'); ?>
+                                                </div>
+
 											<!-- dropdonn mfa-->
-                                            <div class="form-group">
+                                                <?php echo $salesno ?>
+
+                                            <div class="form-group ">
                                                 <?php
-                                                    $cat[''] = lang("select")." ".lang("MFA");
+                                                    $cat[""] = "Select MFA";
                                                         foreach($mfas as $mfa) {
                                                             $cat[$mfa->id] = $mfa->name;
                                                         }
                                                 ?>
-                                                <?= form_dropdown('mfaid', $cat, set_value('mfaid'), 'class="form-control select2 tip" id="mfadropdown"  required="required" style="width:100%;"'); ?>
-                                            </div>  
-                                            <!-- end dropdown mfa-->
+                                                <?= form_dropdownplaceholder('mfaid', $cat, set_value('mfaid'), 'class="form-control select2 tip" id="mfadropdown"  style="width:100%;"'); ?>
+                                            </div>
+
+                                                <!-- end dropdown mfa-->
                                             <div class="form-group" style="margin-bottom:5px;">
                                                 <input type="text" name="code" id="add_item" class="form-control" placeholder="<?=lang('search__scan')?>" />
                                             </div>
@@ -512,27 +521,27 @@
                                     <input type="hidden" name="eid" id="is_delete" value="<?=$eid;?>" />
                                     <input type="hidden" name="total_items" id="total_items" value="0" />
                                     <input type="hidden" name="total_quantity" id="total_quantity" value="0" />
-                                    <input type="submit" id="submit" value="Submit Sale" style="display: none;" />
+                                    <input type="submit" id="submit" value="Submit Sale" hidden  />
                                 </div>
                                 <?=form_close();?>
 							</td>  <!-- end td-->
-					   
+
 					        <td>
 							    <div id="pos">
                                     <div class="well well-sm" id="leftdiv">
                                         <div class="box-body box-profile" align="center">
-                                            <img class="profile-user-img img-responsive img-circle" 
+                                            <img class="profile-user-img img-responsive img-circle"
 											     src="<?php echo base_url('themes/default/assets/dist/img/user4-128x128.jpg'); ?>">
                                             <span class="info-box-number">5457.03.17</span>
                                             <span class="info-box-text">admin@shafco.com - 082117500817 </span>
-                                        </div> 
+                                        </div>
                                     <div class="row">
                                         <div class="col-sm-4 border-right">
                                             <div class="description-block">
                                                 <h5 class="description-header">3,200</h5>
                                                 <span class="description-text">POINT</span>
                                             </div>
-                                        </div>   
+                                        </div>
                                         <div class="col-sm-4 border-right">
                                             <div class="description-block">
                                                 <h5 class="description-header">13,000</h5>
@@ -550,10 +559,10 @@
                                         </div>
                                          <!-- /.col -->
                                     </div>
-                                     <!-- /.row -->                   
+                                     <!-- /.row -->
                                 </div>
 							</td>
-                       
+
 					   <td>
                             <td>
                                 <div class="contents" id="right-col">
@@ -824,6 +833,7 @@
 <div class="modal" data-easein="flipYIn" id="saleModal" tabindex="-1" role="dialog" aria-labelledby="saleModalLabel" aria-hidden="true"></div>
 <div class="modal" data-easein="flipYIn" id="opModal" tabindex="-1" role="dialog" aria-labelledby="opModalLabel" aria-hidden="true"></div>
 
+<!-- modal payment -->
 <div class="modal" data-easein="flipYIn" id="payModal" tabindex="-1" role="dialog" aria-labelledby="payModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-success">
         <div class="modal-content">
@@ -988,12 +998,13 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal"> <?=lang('close')?> </button>
+
             <button class="btn btn-primary" id="<?= $eid ? '' : 'submit-sale'; ?>"><?=lang('submit')?></button>
         </div>
     </div>
 </div>
 </div>
-
+    <!-- end modal payment -->
 <div class="modal" data-easein="flipYIn" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="cModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1076,7 +1087,7 @@
         $('#mm_<?=$m?>').addClass('active');
         $('#<?=$m?>_<?=$v?>').addClass('active');
     });
-    var pro_limit = <?=$Settings->pro_limit?>, java_applet = 0, count = 1, total = 0, an = 1, p_page = 0, page = 0, cat_id = <?=$Settings->default_category?>, tcp = <?=$tcp?>;
+    var pro_limit = <?=$Settings->pro_limit?>, java_applet = 0, count = 1, total = 1, an = 1, p_page = 0, page = 0, cat_id = <?=$Settings->default_category?>, tcp = <?=$tcp?>;
     var gtotal = 0, order_discount = 0, order_tax = 0, protect_delete = <?= ($Admin) ? 0 : ($Settings->pin_code ? 1 : 0); ?>;
     var order_data = {}, bill_data = {};
     var csrf_hash = '<?= $this->security->get_csrf_hash(); ?>';
@@ -1158,6 +1169,7 @@
             alert ($("#mfadropdown option:selected").text());
         });*/
 
+
         <?php if ($this->session->userdata('rmspos')) { ?>
             if (get('spositems')) { remove('spositems'); }
             if (get('spos_discount')) { remove('spos_discount'); }
@@ -1182,6 +1194,7 @@
                 store('spos_discount', '<?=$suspend_sale->order_discount_id;?>');
                 store('spos_tax', '<?=$suspend_sale->order_tax_id;?>');
                 store('spos_customer', '<?=$suspend_sale->customer_id;?>');
+
                 $('#spos_customer').select2().select2('val', '<?=$suspend_sale->customer_id;?>');
                 store('rmspos', '1');
                 $('#tax_val').val('<?=$suspend_sale->order_tax_id;?>');
@@ -1192,21 +1205,24 @@
                     store('spos_discount', '<?=$sale->order_discount_id;?>');
                     store('spos_tax', '<?=$sale->order_tax_id;?>');
                     store('spos_customer', '<?=$sale->customer_id;?>');
-                    store('sale_date', '<?=$sale->date;?>');
-                    $('#spos_customer').select2().select2('val', '<?=$sale->customer_id;?>');
+                   store('sale_date', '<?=$sale->date;?>');
+                  // store('owner', 'yoi');
+                   // $('#spos_customer').select2().select2('val', '<?=$sale->customer_id;?>');
+                  // $('#hold_ref').val('Indra');
                     $('#date').val('<?=$sale->date;?>');
                     store('rmspos', '1');
                     $('#tax_val').val('<?=$sale->order_tax_id;?>');
                     $('#discount_val').val('<?=$sale->order_discount_id;?>');
                     <?php } else { ?>
-                        if (! get('spos_discount')) {
-                            store('spos_discount', '<?=$Settings->default_discount;?>');
-                            $('#discount_val').val('<?=$Settings->default_discount;?>');
-                        }
-                        if (! get('spos_tax')) {
-                            store('spos_tax', '<?=$Settings->default_tax_rate;?>');
-                            $('#tax_val').val('<?=$Settings->default_tax_rate;?>');
-                        }
+
+                           if (! get('spos_discount')) {
+                            store('spos_discount', '< ?=$Settings->default_discount;?>');
+                            $('#discount_val').val('< ?=$Settings->default_discount;?>');
+                            }
+                            if (! get('spos_tax')) {
+                                store('spos_tax', '< ?=$Settings->default_tax_rate;?>');
+                                $('#tax_val').val('< ?=$Settings->default_tax_rate;?>');
+                            }
                         <?php } ?>
 
                         if (ots = get('spos_tax')) {
@@ -1304,13 +1320,24 @@
                             return true;
                         }
                     </script>
+    <script type="text/javascript">
+        $(function () {
+            $('.datetimepicker').datetimepicker({
+                format: 'DD-MM-YYYY'
+            });
+
+
+        });
+    </script>
+
                     <?php
                     if (isset($print) && !empty($print)) {
                         /* include FCPATH.'themes'.DIRECTORY_SEPARATOR.$Settings->theme.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'pos'.DIRECTORY_SEPARATOR.'remote_printing.php'; */
                         include 'remote_printing.php';
                     }
                     ?>
-
+    <script src="<?= $assets ?>plugins/bootstrap-datetimepicker/js/moment.min.js" type="text/javascript"></script>
+    <script src="<?= $assets ?>plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
                     <script src="<?= $assets ?>dist/js/libraries.min.js" type="text/javascript"></script>
                     <script src="<?= $assets ?>dist/js/scripts.min.js" type="text/javascript"></script>
                     <script src="<?= $assets ?>dist/js/pos.min.js" type="text/javascript"></script>

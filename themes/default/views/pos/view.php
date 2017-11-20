@@ -79,6 +79,8 @@ if ($modal) {
                                             <th style="text-align:center; width: 12%; border-bottom: 2px solid #ddd;"><?=lang('quantity');?></th>
                                             <th style="text-align:center; width: 24%; border-bottom: 2px solid #ddd;"><?=lang('price');?></th>
                                             <th style="text-align:center; width: 26%; border-bottom: 2px solid #ddd;"><?=lang('subtotal');?></th>
+                                            <th style="text-align:center; width: 26%; border-bottom: 2px solid #ddd;">Disc</th>
+                                            <th style="text-align:center; width: 26%; border-bottom: 2px solid #ddd;">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -88,21 +90,24 @@ if ($modal) {
                                             echo '<tr><td style="text-align:left;">' . $row->product_name .'</td>';
                                             echo '<td style="text-align:center;">' . $this->tec->formatQuantity($row->quantity) . '</td>';
                                             echo '<td style="text-align:right;">';
-                                            echo $this->tec->formatMoney($row->net_unit_price + ($row->item_tax / $row->quantity)) . '</td><td style="text-align:right;">' . $this->tec->formatMoney($row->subtotal) . '</td></tr>';
+                                            echo $this->tec->formatMoney($row->net_unit_price + ($row->item_tax / $row->quantity)) . '</td><td style="text-align:right;">' . $this->tec->formatMoney($row->subtotal) . '</td>';
+                                            echo '<td style="text-align:center;">' . $row->disc_persen .'%</td>';
+                                            echo '<td style="text-align:right;">';
+                                            echo $this->tec->formatMoney($row->total) .'</td></tr>';
                                         }
                                         ?>
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="2" style="text-align:left;"><?= lang("total"); ?></th>
-                                            <th colspan="2" style="text-align:right;"><?= $this->tec->formatMoney($inv->total + $inv->product_tax); ?></th>
+                                            <th colspan="4" style="text-align:left;"><?= lang("total"); ?></th>
+                                            <th colspan="4" style="text-align:right;"><?= $this->tec->formatMoney($inv->total + $inv->product_tax); ?></th>
                                         </tr>
                                         <?php
                                         if ($inv->order_tax != 0) {
                                             echo '<tr><th colspan="2" style="text-align:left;">' . lang("order_tax") . '</th><th colspan="2" style="text-align:right;">' . $this->tec->formatMoney($inv->order_tax) . '</th></tr>';
                                         }
                                         if ($inv->total_discount != 0) {
-                                            echo '<tr><th colspan="2" style="text-align:left;">' . lang("order_discount") . '</th><th colspan="2" style="text-align:right;">' . $this->tec->formatMoney($inv->total_discount) . '</th></tr>';
+                                            echo '<tr><th colspan="4" style="text-align:left;">' . lang("order_discount") . '</th><th colspan="2" style="text-align:right;">' . $this->tec->formatMoney($inv->total_discount) . '</th></tr>';
                                         }
 
                                         if ($Settings->rounding) {
@@ -110,31 +115,31 @@ if ($modal) {
                                             $rounding = $this->tec->formatDecimal($round_total - $inv->grand_total);
                                             ?>
                                             <tr>
-                                                <th colspan="2" style="text-align:left;"><?= lang("rounding"); ?></th>
-                                                <th colspan="2" style="text-align:right;"><?= $this->tec->formatMoney($rounding); ?></th>
+                                                <th colspan="4" style="text-align:left;"><?= lang("rounding"); ?></th>
+                                                <th colspan="4" style="text-align:right;"><?= $this->tec->formatMoney($rounding); ?></th>
                                             </tr>
                                             <tr>
-                                                <th colspan="2" style="text-align:left;"><?= lang("grand_total"); ?></th>
-                                                <th colspan="2" style="text-align:right;"><?= $this->tec->formatMoney($inv->grand_total + $rounding); ?></th>
+                                                <th colspan="4" style="text-align:left;"><?= lang("grand_total"); ?></th>
+                                                <th colspan="4" style="text-align:right;"><?= $this->tec->formatMoney($inv->grand_total + $rounding); ?></th>
                                             </tr>
                                             <?php
                                         } else {
                                             $round_total = $inv->grand_total;
                                             ?>
                                             <tr>
-                                                <th colspan="2" style="text-align:left;"><?= lang("grand_total"); ?></th>
-                                                <th colspan="2" style="text-align:right;"><?= $this->tec->formatMoney($inv->grand_total); ?></th>
+                                                <th colspan="4" style="text-align:left;"><?= lang("grand_total"); ?></th>
+                                                <th colspan="4" style="text-align:right;"><?= $this->tec->formatMoney($inv->grand_total); ?></th>
                                             </tr>
                                             <?php
                                         }
                                         if ($inv->paid < $round_total) { ?>
                                         <tr>
-                                            <th colspan="2" style="text-align:left;"><?= lang("paid_amount"); ?></th>
-                                            <th colspan="2" style="text-align:right;"><?= $this->tec->formatMoney($inv->paid); ?></th>
+                                            <th colspan="4" style="text-align:left;"><?= lang("paid_amount"); ?></th>
+                                            <th colspan="4" style="text-align:right;"><?= $this->tec->formatMoney($inv->paid); ?></th>
                                         </tr>
                                         <tr>
-                                            <th colspan="2" style="text-align:left;"><?= lang("due_amount"); ?></th>
-                                            <th colspan="2" style="text-align:right;"><?= $this->tec->formatMoney($inv->grand_total - $inv->paid); ?></th>
+                                            <th colspan="4" style="text-align:left;"><?= lang("due_amount"); ?></th>
+                                            <th colspan="4" style="text-align:right;"><?= $this->tec->formatMoney($inv->grand_total - $inv->paid); ?></th>
                                         </tr>
                                         <?php } ?>
                                     </tfoot>
@@ -260,6 +265,7 @@ if ($modal) {
                             $.get(link);
                             return false;
                         });
+
                         $('#email').click(function () {
                             bootbox.prompt({
                                 title: "<?= lang("email_address"); ?>",
@@ -267,7 +273,9 @@ if ($modal) {
                                 value: "<?= $customer->email; ?>",
                                 callback: function (email) {
                                     if (email != null) {
+
                                         $.ajax({
+
                                             type: "post",
                                             url: "<?= site_url('pos/email_receipt') ?>",
                                             data: {<?= $this->security->get_csrf_token_name(); ?>: "<?= $this->security->get_csrf_hash(); ?>", email: email, id: <?= $inv->id; ?>},

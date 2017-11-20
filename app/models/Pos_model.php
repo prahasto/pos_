@@ -32,6 +32,33 @@ class Pos_model extends CI_Model
         return FALSE;
     }
 
+    //public function getLastNo($storecode=null,$date=null)
+    public function getLastNo($date,$orgCode)
+    {
+       $lastno ='';
+      // $tglKode=date('dmY',strtotime($date));
+       $query = $this->db->query("SELECT COALESCE(MAX(substr(salesno, 14,3)),0)+1 AS counter
+                            FROM tec_sales
+                             WHERE substr(salesno, 1 , 3)='".$orgCode."'
+                            AND substr(salesno, 5, 8)='".$date."'");
+       $row = $query->row();
+       if (isset($row)) {
+
+           if($row->counter<10){
+               $lastno=$orgCode.'.'.$date.'.00'.$row->counter;
+           }
+           elseif($row->counter<100){
+               $lastno=$orgCode.'.'.$date.'.0'.$row->counter;
+           }
+           elseif($row->counter<1000){
+               $lastno=$orgCode.'.'.$date.'.'.$row->counter;
+           }
+
+      // $lastno=$row->counter;
+       }
+       return $lastno;
+    }
+
     public function getProductNames($term, $limit = 10) {
         $store_id = $this->session->userdata('store_id');
         $this->db->select("{$this->db->dbprefix('products')}.*, COALESCE(psq.quantity, 0) as quantity, COALESCE(psq.price, 0) as store_price")
@@ -190,6 +217,8 @@ class Pos_model extends CI_Model
         if (!$user_id) {
             $user_id = $this->session->userdata('user_id');
         }
+
+        
         $this->db->select('SUM( COALESCE( grand_total, 0 ) ) AS total, SUM( COALESCE( amount, 0 ) ) AS paid', FALSE)
             ->join('sales', 'sales.id=payments.sale_id', 'left')
             ->where('payments.date >', $date);
