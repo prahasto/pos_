@@ -403,12 +403,13 @@
                                                 <input type="text" name="code" id="add_item" class="form-control" placeholder="<?=lang('search__scan')?>" />
                                             </div>
                                         </div>
+                                        <!-- tabel input produk -->
                                         <div id="printhead" class="print">
                                             <?= $Settings->header; ?>
                                             <p><?= lang('date'); ?>: <?=date($Settings->dateformat)?></p>
                                         </div>
                                         <div id="print" class="fixed-table-container">
-                                        <div id="list-table-div">
+                                          <div id="list-table-div">
                                             <div class="fixed-table-header">
                                                 <table class="table table-striped table-condensed table-hover list-table" style="margin:0;">
                                                     <thead>
@@ -865,38 +866,93 @@
                             </table>
                             <div class="clearfix"></div>
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-xs-12">
                                 <div class="form-group">
-                                    <?= lang('note', 'note'); ?>
+                                   <?= lang('note', 'note'); ?>
                                     <textarea name="note" id="note" class="pa form-control kb-text"></textarea>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row">
-                            <div class="col-xs-6">
+                            <div class="col-xs-5">
                                 <div class="form-group">
                                     <?= lang("amount", "amount"); ?>
                                     <input name="amount" type="text" id="amount"
                                     class="pa form-control kb-pad amount"/>
                                 </div>
                             </div>
-                            <div class="col-xs-6">
+                            <div class="col-xs-5">
                                 <div class="form-group">
                                     <?= lang("paying_by", "paid_by"); ?>
                                     <select id="paid_by" class="form-control paid_by select2" style="width:100%;">
                                         <option value="cash"><?= lang("cash"); ?></option>
+                                        <option value="CC">Debit Card</option>
                                         <option value="CC"><?= lang("cc"); ?></option>
-                                        <option value="cheque"><?= lang("cheque"); ?></option>
+                                        <option value="cheque">Order Retur</option>
                                         <option value="gift_card"><?= lang("gift_card"); ?></option>
-                                        <?= isset($Settings->stripe) ? '<option value="stripe">' . lang("stripe") . '</option>' : ''; ?>
-                                        <option value="other"><?= lang("other"); ?></option>
+                                       <!-- <option value="other"><?= lang("other"); ?></option>-->
                                     </select>
+
+                                </div>
+                            </div>
+                            <div class="col-xs-2">  <?= lang("&nbsp", "paid_by"); ?>
+                                <button class="btn btn-warning" id="addpayingby">Add</button>
+                            </div>
+
+                         <!--   <div class="gc" style="display: none;">
+                                <div class="col-xs-10">
+                                    <div class="form-group">
+                                    <?= lang("gift_card_no", "gift_card_no"); ?>
+                                                <input type="text" id="gift_card_no" class="pa form-control kb-pad gift_card_no gift_card_input"/>
+
+
+                            </div>
+                            </div>
+                            </div> -->
+                             <div class="pcc" style="display:none;">
+
+                                        <div class="col-xs-5">
+                                            <div class="form-group">
+                                                <select style="width:100%;  id="pcc_type"
+                                                        class="form-control pcc_type select2"
+                                                        placeholder="<?= lang('card_type') ?>">
+                                                    <option value="BCA EDC">BCA EDC</option>
+                                                    <option
+                                                        value="Mandiri EDC">Mandiri EDC</option>
+                                                    <option value="BNI EDC">BNI EDC</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-5">
+                                            <div class="form-group">
+                                                <select style="width:100%; id="pcc_type"
+                                                        class="form-control pcc_type select2"
+                                                        placeholder="<?= lang('card_type') ?>">
+                                                    <option value="BCA">BCA</option>
+                                                    <option
+                                                        value="Mandiri">Mandiri</option>
+                                                    <option value="BNI">BNI</option>
+                                                    <option
+                                                        value="CIMB NIAGA">CIMB NIAGA</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                            </div>
+                            <div class="prefnumber"  style="display:none;">
+                                <div class="form-group   col-xs-10">
+                                    <input type="text" id="reffnumber_input" class="form-control reffnumber_input"
+                                           placeholder="Input Reff Number"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-12">
+                        <div class="row ">
+
+
+                                <!--
+                                <div class="col-xs-12">
                                 <div class="form-group gc" style="display: none;">
                                     <?= lang("gift_card_no", "gift_card_no"); ?>
                                     <input type="text" id="gift_card_no"
@@ -976,7 +1032,39 @@
                                     class="form-control payment_note kb-text"/>
                                 </div>
                             </div>
-                        </div>
+                                </div> -->
+                            <!-- tabel detail cara bayar pembayaran-->
+                            <div class="col-xs-12">
+                                <div id="list-table-div">
+                                    <table class=" table-bordered table-condensed" style="margin-bottom: 0;">
+                                        <thead>
+                                        <tr class="warning">
+                                            <th style="width: 20%;text-align:center;">Paying By </th>
+                                            <th style="width: 15%;text-align:center;">Amount</th>
+                                            <th style="width: 10%;text-align:left;">EDC</th>
+                                            <th style="width: 15%;text-align:left;">Bank</th>
+                                            <th style="width: 15%;text-align:left;">Reff No</th>
+                                            <th style="width: 5%; text-align:right;" class="satu"><i class="fa fa-trash-o"></i></th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <table id="posTable" class=" table-bordered table-striped table-condensed table-hover list-table" style="margin:0px;" data-height="100">
+                                    <thead>
+                                    <tr class="success">
+                                        <th style="width: 20%;text-align:left;"><?=lang('product')?></th>
+                                        <th style="width: 15%;text-align:left;"><?=lang('price')?></th>
+                                        <th style="width: 7%;text-align:left;"><?=lang('qty')?></th>
+                                        <th style="width: 19%;text-align:left;"><?=lang('subtotal')?></th>
+                                        <th style="width: 7%;text-align:right;">Disc</th>
+                                        <th style="width: 5%;" class="satu"><i class="fa fa-trash-o"></i></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+
+
+                            </div>
                     </div>
                 </div>
                 <div class="col-xs-3 text-center">
@@ -1082,7 +1170,7 @@
     var dateformat = '<?=$Settings->dateformat;?>', timeformat = '<?= $Settings->timeformat ?>';
     <?php unset($Settings->protocol, $Settings->smtp_host, $Settings->smtp_user, $Settings->smtp_pass, $Settings->smtp_port, $Settings->smtp_crypto, $Settings->mailpath, $Settings->timezone, $Settings->setting_id, $Settings->default_email, $Settings->version, $Settings->stripe, $Settings->stripe_secret_key, $Settings->stripe_publishable_key); ?>
     var Settings = <?= json_encode($Settings); ?>;
-    var sid = false, username = '<?=$this->session->userdata('username');?>', spositems = {};
+    var sid = false, username = '<?=$this->session->userdata('username');?>', spositems = {}, sposaddpayment = {};
     $(window).load(function () {
         $('#mm_<?=$m?>').addClass('active');
         $('#<?=$m?>_<?=$v?>').addClass('active');
